@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký tài khoản</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px;
+      font-family: Arial, Helvetica, sans-serif; color: #1f2937;
+      background: linear-gradient(135deg, #dbeafe, #ede9fe);
+    }
+    .card { width: 100%; max-width: 430px; background: #fff; padding: 32px; border-radius: 18px; box-shadow: 0 14px 40px rgba(31,41,55,.14); }
+    .logo { width: 58px; height: 58px; margin: 0 auto 14px; display: grid; place-items: center; border-radius: 16px; background: #4f46e5; color: #fff; font-size: 28px; }
+    h1 { text-align: center; margin: 0; font-size: 27px; }
+    .subtitle { text-align: center; color: #6b7280; font-size: 14px; margin: 9px 0 25px; }
+    .field { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 700; }
+    input { width: 100%; padding: 12px 13px; border: 1px solid #d1d5db; border-radius: 9px; font-size: 15px; outline: none; }
+    input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
+    .hint { color: #6b7280; font-size: 12px; margin-top: 6px; }
+    .terms { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; font-weight: 400; line-height: 1.5; margin: 3px 0 20px; }
+    .terms input { width: auto; margin-top: 3px; }
+    a { color: #4f46e5; text-decoration: none; } a:hover { text-decoration: underline; }
+    button { width: 100%; padding: 13px; border: 0; border-radius: 9px; background: #4f46e5; color: white; font-size: 16px; font-weight: 700; cursor: pointer; }
+    button:hover { background: #4338ca; }
+    .message { display: none; margin-top: 15px; padding: 11px; border-radius: 8px; font-size: 14px; line-height: 1.45; }
+    .message.error { display: block; background: #fee2e2; color: #991b1b; }
+    .message.success { display: block; background: #dcfce7; color: #166534; }
+    .footer { text-align: center; font-size: 14px; color: #6b7280; margin: 21px 0 0; }
+    @media (max-width: 420px) { .card { padding: 25px 20px; } }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="logo" aria-hidden="true">✨</div>
+    <h1>Tạo tài khoản</h1>
+    <p class="subtitle">Điền thông tin bên dưới để đăng ký</p>
+
+    <form id="registerForm">
+      <div class="field">
+        <label for="name">Họ và tên</label>
+        <input id="name" name="name" type="text" placeholder="Nguyễn Văn A" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="vidu@email.com" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="password">Mật khẩu</label>
+        <input id="password" name="password" type="password" placeholder="Ít nhất 6 ký tự" minlength="6" autocomplete="new-password" required>
+      </div>
+      <div class="field">
+        <label for="confirmPassword">Nhập lại mật khẩu</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Nhập lại mật khẩu" minlength="6" autocomplete="new-password" required>
+      </div>
+      <label class="terms"><input id="terms" type="checkbox" required> <span>Tôi đồng ý với các điều khoản sử dụng (mẫu).</span></label>
+      <button type="submit">Đăng ký</button>
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+    </form>
+    <p class="footer">Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+  </main>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const message = document.getElementById('message');
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = 'message ' + type;
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (password.value.length < 6) {
+        showMessage('Mật khẩu cần có ít nhất 6 ký tự.', 'error');
+        return;
+      }
+      if (password.value !== confirmPassword.value) {
+        showMessage('Mật khẩu nhập lại chưa khớp.', 'error');
+        confirmPassword.focus();
+        return;
+      }
+      if (!document.getElementById('terms').checked) {
+        showMessage('Bạn cần đồng ý với điều khoản mẫu để tiếp tục.', 'error');
+        return;
+      }
+      // Demo giao diện: chưa lưu tài khoản vào cơ sở dữ liệu.
+      showMessage('Thông tin hợp lệ! Đây là bản demo, tài khoản chưa được lưu vào hệ thống.', 'success');
+    });
+  </script>
+</body>
+</html>
