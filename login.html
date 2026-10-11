@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #ede9fe);
+      color: #1f2937;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      padding: 32px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 14px 40px rgba(31, 41, 55, .14);
+    }
+    .logo {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 14px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: #4f46e5;
+      color: white;
+      font-size: 28px;
+    }
+    h1 { margin: 0; text-align: center; font-size: 27px; }
+    .subtitle { margin: 9px 0 26px; text-align: center; color: #6b7280; font-size: 14px; }
+    .field { margin-bottom: 17px; }
+    label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 700; }
+    input[type="email"], input[type="password"], input[type="text"] {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
+    .password-wrap { display: flex; gap: 8px; }
+    .password-wrap input { flex: 1; min-width: 0; }
+    .show-btn {
+      border: 1px solid #d1d5db; border-radius: 9px; padding: 0 11px;
+      background: #f9fafb; cursor: pointer; color: #374151;
+    }
+    .options { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0 21px; font-size: 13px; }
+    .remember { display: flex; align-items: center; gap: 7px; font-weight: 400; margin: 0; }
+    a { color: #4f46e5; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .submit-btn {
+      width: 100%; padding: 13px; border: 0; border-radius: 9px;
+      background: #4f46e5; color: white; font-size: 16px; font-weight: 700; cursor: pointer;
+    }
+    .submit-btn:hover { background: #4338ca; }
+    .message { display: none; margin-top: 16px; padding: 11px; border-radius: 8px; font-size: 14px; line-height: 1.45; }
+    .message.error { display: block; color: #991b1b; background: #fee2e2; }
+    .message.success { display: block; color: #166534; background: #dcfce7; }
+    .footer { margin: 22px 0 0; text-align: center; color: #6b7280; font-size: 14px; }
+    @media (max-width: 420px) { .login-card { padding: 25px 20px; } }
+  </style>
+</head>
+<body>
+  <main class="login-card">
+    <div class="logo" aria-hidden="true">🔐</div>
+    <h1>Chào mừng trở lại!</h1>
+    <p class="subtitle">Đăng nhập vào tài khoản của bạn</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="vidu@email.com" autocomplete="username" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Mật khẩu</label>
+        <div class="password-wrap">
+          <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" minlength="6" required>
+          <button class="show-btn" type="button" id="togglePassword" aria-label="Hiện mật khẩu">Hiện</button>
+        </div>
+      </div>
+
+      <div class="options">
+        <label class="remember"><input type="checkbox" id="remember"> Ghi nhớ tôi</label>
+        <a href="#" id="forgotLink">Quên mật khẩu?</a>
+      </div>
+
+      <button class="submit-btn" type="submit">Đăng nhập</button>
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+    </form>
+
+    <p class="footer">Chưa có tài khoản? <a href="#" id="registerLink">Đăng ký</a></p>
+  </main>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    const message = document.getElementById('message');
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = 'message ' + type;
+    }
+
+    togglePassword.addEventListener('click', () => {
+      const shouldShow = passwordInput.type === 'password';
+      passwordInput.type = shouldShow ? 'text' : 'password';
+      togglePassword.textContent = shouldShow ? 'Ẩn' : 'Hiện';
+      togglePassword.setAttribute('aria-label', shouldShow ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showMessage('Vui lòng nhập đầy đủ email và mật khẩu.', 'error');
+        return;
+      }
+      if (password.length < 6) {
+        showMessage('Mật khẩu cần có ít nhất 6 ký tự.', 'error');
+        return;
+      }
+
+      // Đây chỉ là giao diện mẫu: chưa xác thực tài khoản với máy chủ.
+      showMessage('Kiểm tra hợp lệ thành công! Đây là bản demo, chưa đăng nhập vào hệ thống thật.', 'success');
+    });
+
+    document.getElementById('forgotLink').addEventListener('click', (event) => {
+      event.preventDefault();
+      showMessage('Chức năng khôi phục mật khẩu cần được kết nối với hệ thống thật.', 'error');
+    });
+
+    document.getElementById('registerLink').addEventListener('click', (event) => {
+      event.preventDefault();
+      showMessage('Bạn có thể tạo trang register.html để làm chức năng đăng ký.', 'success');
+    });
+  </script>
+</body>
+</html>
